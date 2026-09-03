@@ -1865,6 +1865,11 @@ class SecDesk(tk.Tk):
             )
 
     def toggle_dark_mode(self):
+        self.dark_mode.set(not self.dark_mode.get())
+        self.dark_mode_button.configure(
+            text="Dark Mode: On" if self.dark_mode.get()
+            else "Dark Mode: Off"
+        )
         self.apply_theme()
 
     # ========================================================
@@ -1896,12 +1901,12 @@ class SecDesk(tk.Tk):
             command=self.toggle_advanced
         ).pack(side="right")
 
-        ttk.Checkbutton(
+        self.dark_mode_button = ttk.Button(
             header,
-            text="Dark Mode",
-            variable=self.dark_mode,
+            text="Dark Mode: Off",
             command=self.toggle_dark_mode
-        ).pack(side="right", padx=(0, 15))
+        )
+        self.dark_mode_button.pack(side="right", padx=(0, 15))
 
         ttk.Label(
             header,
