@@ -1714,6 +1714,7 @@ class SecDesk(tk.Tk):
         self.output_queue = queue.Queue()
 
         self.advanced_mode = tk.BooleanVar(value=False)
+        self.dark_mode = tk.BooleanVar(value=False)
 
         self.setup_style()
         self.build_interface()
@@ -1761,6 +1762,111 @@ class SecDesk(tk.Tk):
             font=("TkDefaultFont", 9)
         )
 
+        self.apply_theme()
+
+    def apply_theme(self):
+
+        colors = {
+            "window": "#1f2329" if self.dark_mode.get() else "#f4f5f7",
+            "surface": "#2b313a" if self.dark_mode.get() else "#ffffff",
+            "text": "#e6edf3" if self.dark_mode.get() else "#20252b",
+            "muted": "#aab4c0" if self.dark_mode.get() else "#5f6873",
+            "border": "#454d58" if self.dark_mode.get() else "#c9ced6",
+            "accent": "#4ea1ff" if self.dark_mode.get() else "#1769aa",
+            "select": "#315d85" if self.dark_mode.get() else "#cfe8ff",
+        }
+
+        style = ttk.Style(self)
+        self.configure(background=colors["window"])
+
+        style.configure(
+            ".",
+            background=colors["window"],
+            foreground=colors["text"]
+        )
+        style.configure("TFrame", background=colors["window"])
+        style.configure(
+            "TLabel",
+            background=colors["window"],
+            foreground=colors["text"]
+        )
+        style.configure(
+            "TLabelframe",
+            background=colors["window"],
+            bordercolor=colors["border"]
+        )
+        style.configure(
+            "TLabelframe.Label",
+            background=colors["window"],
+            foreground=colors["text"]
+        )
+        style.configure(
+            "TButton",
+            background=colors["surface"],
+            foreground=colors["text"]
+        )
+        style.map(
+            "TButton",
+            background=[("active", colors["select"])],
+            foreground=[("active", colors["text"])]
+        )
+        style.configure(
+            "Accent.TButton",
+            background=colors["accent"],
+            foreground="#ffffff"
+        )
+        style.map(
+            "Accent.TButton",
+            background=[("active", colors["select"])]
+        )
+        style.configure(
+            "TEntry",
+            fieldbackground=colors["surface"],
+            foreground=colors["text"]
+        )
+        style.configure(
+            "TCombobox",
+            fieldbackground=colors["surface"],
+            foreground=colors["text"]
+        )
+        style.map(
+            "TCombobox",
+            fieldbackground=[("readonly", colors["surface"])],
+            foreground=[("readonly", colors["text"])]
+        )
+        style.configure(
+            "Header.TLabel",
+            background=colors["window"],
+            foreground=colors["text"]
+        )
+        style.configure(
+            "ToolTitle.TLabel",
+            background=colors["window"],
+            foreground=colors["text"]
+        )
+        style.configure(
+            "Small.TLabel",
+            background=colors["window"],
+            foreground=colors["muted"]
+        )
+
+        if hasattr(self, "category_list"):
+            self.category_list.configure(
+                background=colors["surface"],
+                foreground=colors["text"],
+                selectbackground=colors["accent"],
+                selectforeground="#ffffff"
+            )
+        if hasattr(self, "output"):
+            self.output.configure(
+                background=colors["surface"],
+                foreground=colors["text"],
+                insertbackground=colors["text"]
+            )
+
+    def toggle_dark_mode(self):
+        self.apply_theme()
+
     # ========================================================
     # MAIN UI
     # ========================================================
@@ -1789,6 +1895,13 @@ class SecDesk(tk.Tk):
             variable=self.advanced_mode,
             command=self.toggle_advanced
         ).pack(side="right")
+
+        ttk.Checkbutton(
+            header,
+            text="Dark Mode",
+            variable=self.dark_mode,
+            command=self.toggle_dark_mode
+        ).pack(side="right", padx=(0, 15))
 
         ttk.Label(
             header,
