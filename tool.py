@@ -1714,7 +1714,7 @@ class SecDesk(tk.Tk):
         self.output_queue = queue.Queue()
 
         self.advanced_mode = tk.BooleanVar(value=False)
-        self.dark_mode = tk.BooleanVar(value=False)
+        self.dark_mode = tk.BooleanVar(value=True)
 
         self.setup_style()
         self.build_interface()
@@ -1738,28 +1738,57 @@ class SecDesk(tk.Tk):
 
         style.configure(
             "TButton",
-            padding=(10, 6)
+            padding=(10, 7),
+            relief="flat",
+            borderwidth=0
         )
 
         style.configure(
             "Accent.TButton",
-            padding=(15, 7),
-            font=("TkDefaultFont", 10, "bold")
+            padding=(16, 9),
+            font=("TkDefaultFont", 10, "bold"),
+            relief="flat",
+            borderwidth=0
         )
 
         style.configure(
             "Header.TLabel",
-            font=("TkDefaultFont", 18, "bold")
+            font=("TkDefaultFont", 22, "bold")
         )
 
         style.configure(
             "ToolTitle.TLabel",
-            font=("TkDefaultFont", 14, "bold")
+            font=("TkDefaultFont", 15, "bold")
         )
 
         style.configure(
             "Small.TLabel",
-            font=("TkDefaultFont", 9)
+            font=("TkDefaultFont", 9, "bold")
+        )
+
+        style.configure(
+            "SidebarHeader.TLabel",
+            font=("TkDefaultFont", 10, "bold")
+        )
+
+        style.configure(
+            "Metric.TLabel",
+            font=("TkDefaultFont", 9, "bold")
+        )
+
+        style.configure(
+            "MetricValue.TLabel",
+            font=("TkDefaultFont", 16, "bold")
+        )
+
+        style.configure(
+            "Card.TLabelframe",
+            borderwidth=1
+        )
+
+        style.configure(
+            "Card.TLabelframe.Label",
+            padding=(4, 0)
         )
 
         self.apply_theme()
@@ -1767,13 +1796,15 @@ class SecDesk(tk.Tk):
     def apply_theme(self):
 
         colors = {
-            "window": "#1f2329" if self.dark_mode.get() else "#f4f5f7",
-            "surface": "#2b313a" if self.dark_mode.get() else "#ffffff",
-            "text": "#e6edf3" if self.dark_mode.get() else "#20252b",
-            "muted": "#aab4c0" if self.dark_mode.get() else "#5f6873",
-            "border": "#454d58" if self.dark_mode.get() else "#c9ced6",
-            "accent": "#4ea1ff" if self.dark_mode.get() else "#1769aa",
-            "select": "#315d85" if self.dark_mode.get() else "#cfe8ff",
+            "window": "#0b1220" if self.dark_mode.get() else "#eef3f8",
+            "surface": "#121d2c" if self.dark_mode.get() else "#ffffff",
+            "panel": "#1a2637" if self.dark_mode.get() else "#f5f7fa",
+            "text": "#e6edf7" if self.dark_mode.get() else "#1d2430",
+            "muted": "#9aa9bc" if self.dark_mode.get() else "#5d6a7d",
+            "border": "#2b3a4d" if self.dark_mode.get() else "#d2dae2",
+            "accent": "#38bdf8" if self.dark_mode.get() else "#0f66b3",
+            "select": "#1d4f91" if self.dark_mode.get() else "#d9efff",
+            "accent_soft": "#0f172a" if self.dark_mode.get() else "#edf4fb",
         }
 
         style = ttk.Style(self)
@@ -1782,7 +1813,8 @@ class SecDesk(tk.Tk):
         style.configure(
             ".",
             background=colors["window"],
-            foreground=colors["text"]
+            foreground=colors["text"],
+            borderwidth=0
         )
         style.configure("TFrame", background=colors["window"])
         style.configure(
@@ -1793,17 +1825,20 @@ class SecDesk(tk.Tk):
         style.configure(
             "TLabelframe",
             background=colors["window"],
-            bordercolor=colors["border"]
+            bordercolor=colors["border"],
+            relief="flat"
         )
         style.configure(
             "TLabelframe.Label",
             background=colors["window"],
-            foreground=colors["text"]
+            foreground=colors["text"],
+            font=("TkDefaultFont", 10, "bold")
         )
         style.configure(
             "TButton",
             background=colors["surface"],
-            foreground=colors["text"]
+            foreground=colors["text"],
+            bordercolor=colors["border"]
         )
         style.map(
             "TButton",
@@ -1817,17 +1852,21 @@ class SecDesk(tk.Tk):
         )
         style.map(
             "Accent.TButton",
-            background=[("active", colors["select"])]
+            background=[("active", colors["select"])],
+            foreground=[("active", "#ffffff")]
         )
         style.configure(
             "TEntry",
             fieldbackground=colors["surface"],
-            foreground=colors["text"]
+            foreground=colors["text"],
+            borderwidth=0,
+            padding=(8, 6)
         )
         style.configure(
             "TCombobox",
             fieldbackground=colors["surface"],
-            foreground=colors["text"]
+            foreground=colors["text"],
+            padding=(8, 6)
         )
         style.map(
             "TCombobox",
@@ -1849,20 +1888,43 @@ class SecDesk(tk.Tk):
             background=colors["window"],
             foreground=colors["muted"]
         )
+        style.configure(
+            "SidebarHeader.TLabel",
+            background=colors["window"],
+            foreground=colors["text"]
+        )
+        style.configure(
+            "Metric.TLabel",
+            background=colors["window"],
+            foreground=colors["accent"]
+        )
+        style.configure(
+            "MetricValue.TLabel",
+            background=colors["window"],
+            foreground=colors["text"]
+        )
 
         if hasattr(self, "category_list"):
             self.category_list.configure(
-                background=colors["surface"],
+                background=colors["panel"],
                 foreground=colors["text"],
                 selectbackground=colors["accent"],
-                selectforeground="#ffffff"
+                selectforeground="#ffffff",
+                relief="flat",
+                highlightthickness=0,
+                borderwidth=0
             )
         if hasattr(self, "output"):
             self.output.configure(
                 background=colors["surface"],
                 foreground=colors["text"],
-                insertbackground=colors["text"]
+                insertbackground=colors["text"],
+                borderwidth=0,
+                highlightthickness=0
             )
+
+        if hasattr(self, "header_strip"):
+            self.header_strip.configure(background=colors["accent"])
 
     def toggle_dark_mode(self):
         self.dark_mode.set(not self.dark_mode.get())
@@ -1879,8 +1941,11 @@ class SecDesk(tk.Tk):
     def build_interface(self):
 
         # Header
-        header = ttk.Frame(self, padding=(15, 12))
+        header = ttk.Frame(self, padding=(18, 12))
         header.pack(fill="x")
+
+        self.header_strip = tk.Frame(self, height=3, bg="#38bdf8")
+        self.header_strip.pack(fill="x")
 
         ttk.Label(
             header,
@@ -1891,7 +1956,7 @@ class SecDesk(tk.Tk):
         ttk.Label(
             header,
             text="  Security Operations Workbench",
-            font=("TkDefaultFont", 10)
+            font=("TkDefaultFont", 10, "bold")
         ).pack(side="left")
 
         ttk.Checkbutton(
@@ -1903,7 +1968,7 @@ class SecDesk(tk.Tk):
 
         self.dark_mode_button = ttk.Button(
             header,
-            text="Dark Mode: Off",
+            text="Dark Mode: On" if self.dark_mode.get() else "Dark Mode: Off",
             command=self.toggle_dark_mode
         )
         self.dark_mode_button.pack(side="right", padx=(0, 15))
@@ -1933,24 +1998,44 @@ class SecDesk(tk.Tk):
         ttk.Label(
             sidebar,
             text="Categories",
-            font=("TkDefaultFont", 11, "bold")
+            style="SidebarHeader.TLabel"
         ).pack(anchor="w", pady=(0, 8))
+
+        metric_frame = tk.Frame(sidebar, bg="", padx=4, pady=4)
+        metric_frame.pack(fill="x", pady=(0, 10))
+
+        self.category_metric = tk.Frame(metric_frame, bg="#1a2637", padx=8, pady=8)
+        self.category_metric.pack(side="left", fill="x", expand=True)
+        tk.Label(self.category_metric, text="Categories", bg="#1a2637", fg="#9aa9bc", font=("TkDefaultFont", 9, "bold")).pack(anchor="w")
+        self.category_count_label = tk.Label(self.category_metric, text="0", bg="#1a2637", fg="#38bdf8", font=("TkDefaultFont", 18, "bold"))
+        self.category_count_label.pack(anchor="w")
+
+        self.tool_metric = tk.Frame(metric_frame, bg="#1a2637", padx=8, pady=8)
+        self.tool_metric.pack(side="left", fill="x", expand=True, padx=(8, 0))
+        tk.Label(self.tool_metric, text="Tools", bg="#1a2637", fg="#9aa9bc", font=("TkDefaultFont", 9, "bold")).pack(anchor="w")
+        self.tool_count_label = tk.Label(self.tool_metric, text="0", bg="#1a2637", fg="#38bdf8", font=("TkDefaultFont", 18, "bold"))
+        self.tool_count_label.pack(anchor="w")
 
         self.category_list = tk.Listbox(
             sidebar,
             activestyle="none",
             relief="flat",
             highlightthickness=0,
-            font=("TkDefaultFont", 10)
+            font=("TkDefaultFont", 10, "bold"),
+            bd=0,
+            selectmode="browse"
         )
 
         self.category_list.pack(
             fill="both",
-            expand=True
+            expand=True,
+            pady=(0, 8)
         )
 
         for category in TOOLS:
             self.category_list.insert("end", category)
+
+        self.update_sidebar_summary()
 
         self.category_list.bind(
             "<<ListboxSelect>>",
@@ -2219,6 +2304,12 @@ class SecDesk(tk.Tk):
     # CATEGORY
     # ========================================================
 
+    def update_sidebar_summary(self):
+        category_count = len(TOOLS)
+        tool_count = sum(len(category_tools) for category_tools in TOOLS.values())
+        self.category_count_label.configure(text=str(category_count))
+        self.tool_count_label.configure(text=str(tool_count))
+
     def category_changed(self, event=None):
 
         selection = self.category_list.curselection()
@@ -2240,6 +2331,8 @@ class SecDesk(tk.Tk):
         if tools:
             self.tool_combo.current(0)
             self.load_tool(tools[0])
+
+        self.update_sidebar_summary()
 
     # ========================================================
     # TOOL
